@@ -1,0 +1,46 @@
+settings:
+  base_url: "https://www.nseindia.com"
+  timeout_seconds: 20
+  max_retries: 3
+  backoff_factor: 2          # waits 2s, 4s, 8s between retries
+  delay_between_requests: 2  # polite pause between datasets
+  output_dir: "output"
+  log_dir: "logs"
+  user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36"
+
+datasets:
+  top-gainers-losers:
+    page_url: "https://www.nseindia.com/market-data/top-gainers-losers"
+    api_url: "https://www.nseindia.com/api/live-analysis-variations"
+    variants:
+      - { label: "gainer", params: { index: "gainers" } }
+      - { label: "loser",  params: { index: "loosers" } }
+    label_column: "category"
+    records_path: ["NIFTY", "data"]
+    required_columns: ["symbol", "ltp", "net_price"]
+    numeric_columns: ["ltp", "net_price"]
+    dedupe_key: ["symbol", "category"]
+
+  upper-band-hitters:
+    page_url: "https://www.nseindia.com/market-data/upper-band-hitters"
+    api_url: "https://www.nseindia.com/api/live-analysis-price-band-hitter"
+    records_path: ["upper", "AllSec", "data"]
+    required_columns: ["symbol", "ltp", "pChange"]
+    numeric_columns: ["ltp", "change", "pChange", "priceBand"]
+    dedupe_key: ["symbol"]
+
+  volume-gainers-spurts:
+    page_url: "https://www.nseindia.com/market-data/volume-gainers-spurts"
+    api_url: "https://www.nseindia.com/api/live-analysis-volume-gainers"
+    records_path: ["data"]
+    required_columns: ["symbol", "volume", "ltp"]
+    numeric_columns: ["volume", "ltp", "pChange"]
+    dedupe_key: ["symbol"]
+
+  52-week-high:
+    page_url: "https://www.nseindia.com/market-data/52-week-high-equity-market"
+    api_url: "https://www.nseindia.com/api/live-analysis-data-52weekhighstock"
+    records_path: ["data"]
+    required_columns: ["symbol", "ltp", "new52WHL"]
+    numeric_columns: ["ltp", "new52WHL", "prev52WHL", "pChange"]
+    dedupe_key: ["symbol"]
